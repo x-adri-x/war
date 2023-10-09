@@ -1,15 +1,31 @@
+from card import Card
+
 class Deck:
+
+    suits = ["Spades", "Clubs", "Diamonds", "Hearts"]
+    ranks = [range(2, 14)]
+
     def __init__(self):
         self.cards = []
     
-    @classmethod
-    def initialize(cls):
-        ...
+    def initialize(self, cards):
+        
+        for suit in self.suits:
+            for rank in self.ranks:
+                card = Card(suit, rank)
+                cards.append(card)
+        return cards
 
-    @classmethod
-    def deal_cards(cls):
+    @property
+    def cards(self):
+        return self._cards
+    
+    @cards.setter
+    def cards(self, cards):
+        self._cards = self.initialize(cards)
+
+    def deal_cards(self):
         ...
     
-    @classmethod
-    def shuffle(cls):
+    def shuffle(self):
         ...
