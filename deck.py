@@ -1,9 +1,10 @@
 from card import Card
+import random
 
 class Deck:
 
     suits = ["Spades", "Clubs", "Diamonds", "Hearts"]
-    ranks = [range(2, 14)]
+    ranks = list(range(2, 15))
 
     def __init__(self):
         self.cards = []
@@ -16,6 +17,9 @@ class Deck:
                 cards.append(card)
         return cards
 
+    def __str__(self):
+        return self.cards[3]
+
     @property
     def cards(self):
         return self._cards
@@ -24,8 +28,10 @@ class Deck:
     def cards(self, cards):
         self._cards = self.initialize(cards)
 
-    def deal_cards(self):
-        ...
+    def deal_cards(self, player1, player2):
+        self.shuffle()
+        player1.cards = self.cards[1:27]
+        player2.cards = self.cards[26:]
     
     def shuffle(self):
-        ...
+        random.shuffle(self.cards)
