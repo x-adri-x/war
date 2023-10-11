@@ -3,22 +3,11 @@ import random
 
 class Deck:
 
-    suits = ["Spades", "Clubs", "Diamonds", "Hearts"]
+    suits = ["♠️", "♣️", "♦️", "♥️"]
     ranks = list(range(2, 15))
 
     def __init__(self):
         self.cards = []
-    
-    def initialize(self, cards):
-        
-        for suit in self.suits:
-            for rank in self.ranks:
-                card = Card(suit, rank)
-                cards.append(card)
-        return cards
-
-    def __str__(self):
-        return self.cards[3]
 
     @property
     def cards(self):
@@ -27,6 +16,16 @@ class Deck:
     @cards.setter
     def cards(self, cards):
         self._cards = self.initialize(cards)
+
+    def initialize(self, cards):
+        for suit in self.suits:
+            for rank in self.ranks:
+                card = Card(rank, suit)
+                cards.append(card)
+        return cards
+
+    def __str__(self):
+        return self.cards[3]
 
     def deal_cards(self, player1, player2):
         self.shuffle()
