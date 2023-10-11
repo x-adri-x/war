@@ -1,12 +1,22 @@
+import sys
 from deck import Deck
-from player import Player
+from game import Game
 
 def main():
-    deck = Deck()
-    player_1 = Player("Joe")
-    player_2 = Player("Susan")
-    deck.deal_cards(player_1, player_2)
-    print(player_1.cards)
+    try:
+        game = Game()
+        player_1 = game.create_player(1)
+        player_2 = game.create_player(2)
+
+        deck = Deck()
+        deck.deal_cards(player_1, player_2)
+        print("\nThe game is starting ...\n"
+            "The deck is being shuffled ...\n")
+        print(game.pretty_print("Let's play!"))
+        print("Hit enter to start a round!")
+        game.play_a_round(player_1, player_2)
+    except (EOFError, KeyboardInterrupt):
+        sys.exit("\nExited Game of War! Sorry to see you go :(")
 
 
 if __name__ == "__main__":
