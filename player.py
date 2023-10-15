@@ -1,3 +1,6 @@
+from card import Card
+
+
 class Player:
     def __init__(self, name):
         self.name = name
@@ -14,25 +17,22 @@ class Player:
         else:
             self._name = name
 
-    def play_a_card(self):
-        if len(self.cards) == 0:
-            raise IndexError
-        else:
-            card = self.cards.pop(0)
-            card.player = self.name
-            return card
+    def draw_card(self) -> Card:
+        card = self.cards.pop(0)
+        card.player = self
+        return card
+    
+    def has_cards(self) -> bool:
+        return len(self.cards) != 0
         
     def add_cards(self, cards_to_add):
-        ...
-        
-    def play_cards_at_war(self):
+        """ Adds the cards won to the player's deck. """
+        for card in cards_to_add:
+            self.cards.append(card)
+
+    def draw_cards_at_war(self) -> list[Card]:
         cards = []
-        face_down_card = self.play_a_card()
-        try:
-            face_up_card = self.play_a_card()
-        except IndexError:
-            cards.append(face_down_card)
-        else:
-            cards.append(face_down_card)
-            cards.append(face_up_card)
+        cards.append(self.draw_card())
+        if self.has_cards():
+            cards.append(self.draw_card())
         return cards

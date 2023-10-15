@@ -13,8 +13,7 @@ def main():
         print("\nThe game is starting ...\n"
             "The deck is being shuffled ...\n")
         print(game.pretty_print("Let's play!"))
-        print("Hit enter to start a round!")
-        game.play_a_round(player_1, player_2)
+        game.play_game(player_1, player_2)
     except (EOFError, KeyboardInterrupt):
         sys.exit("\nExited Game of War! Sorry to see you go :(")
 

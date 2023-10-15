@@ -5,29 +5,13 @@ class Deck:
 
     suits = ["♠️", "♣️", "♦️", "♥️"]
     ranks = list(range(2, 15))
-
-    def __init__(self):
-        self.cards = []
-
-    @property
-    def cards(self):
-        return self._cards
     
-    @cards.setter
-    def cards(self, cards):
-        self._cards = self.initialize(cards)
-
-    def initialize(self, cards):
-        for suit in self.suits:
-            for rank in self.ranks:
-                card = Card(rank, suit)
-                cards.append(card)
-        return cards
-
-    def __str__(self):
-        return self.cards[3]
+    def __init__(self):
+        """ Initialise the deck. """
+        self.cards = [Card(r, s) for s in self.suits for r in self.ranks]
 
     def deal_cards(self, player1, player2):
+        """ Deal each player 26 cards from the shuffled deck. """
         self.shuffle()
         player1.cards = self.cards[1:27]
         player2.cards = self.cards[26:]
