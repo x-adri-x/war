@@ -16,46 +16,51 @@ class Game:
                 print("Please type your name in order to start the game.")
             else:
                 return player
-
-    def shuffle_players(self, player1, player2):
-        players = [player1, player2]
+    
+    def shuffle_players(self, players):
         random.shuffle(players)
         return players
 
     def play_game(self, player1, player2):
+        rounds = 0
+        players = [player1, player2]
         while True:
-        # while input() == "":
             is_war = False
             # a stack to store all the cards that were placed down during war
             cards_played_at_war = []
-            # store the cards played by the players
+            self.shuffle_players(players)
+            # store the cards played by the players in a round
             face_up_cards = [
-                x.draw_card() if x.has_cards() else self.end_game(x, [player1, player2])
-                for x in [player1, player2]
+                x.draw_card() if x.has_cards() else self.end_game(x, players, rounds)
+                for x in players
             ]
             # outcome stores the winning card object or the word "war"
             outcome = self.compare_cards(face_up_cards)
+            rounds += 1
             if outcome == "war":
                 is_war = True
-                # if there is a war, add the two cards with equal rank to the war card stack
+                # if there is a war, add the two cards with equal ranks to the war card stack
                 cards_played_at_war.extend(face_up_cards)
             else:
-                # if there is no war, add the two cards played to the winner's stack
+                # if there is no war, add the two cards played to the winning player's stack
                 outcome.player.add_cards(face_up_cards)
                 self.finish_round(face_up_cards, player1, player2, outcome)
             while is_war:
                 self.print_war_round(face_up_cards, player1, player2)
                 face_up_cards = []
-                for player in [player1, player2]:
+                self.shuffle_players(players)
+                for player in players:
+                    # draw cards if the players have enough, or end the game if one of them runs out
                     cards_drawn = (
                         player.draw_cards_at_war()
                         if player.has_cards()
-                        else self.end_game(player, [player1, player2])
+                        else self.end_game(player, players, rounds)
                     )
                     cards_played_at_war.extend(cards_drawn)
                     face_up_cards.append(cards_drawn.pop())
                 outcome = self.compare_cards(face_up_cards)
                 if outcome != "war":
+                    rounds += 1
                     is_war = False
                     outcome.player.add_cards(cards_played_at_war)
                     self.finish_round(face_up_cards, player1, player2, outcome)
@@ -68,9 +73,18 @@ class Game:
         else:
             return "war"
 
-    def end_game(self, player_lost, players):
+    def end_game(self, player_lost, players, rounds):
+        """ When one of the players runs out of cards, finish the game 
+
+        Parameters:
+            player_lost: class Player, the player who ran out of cards
+            players: list of class Player, the players of the game
+            round: int, counting the played rounds of game
+        """
         print(self.pretty_print(f"{player_lost.name} ran out of cards!"))
+        # get the winning Player object
         winner = [x for x in players if x.name != player_lost.name][0]
+        print(f"A total of {rounds} rounds were played.")
         sys.exit(self.pretty_print(f"{winner.name} has won!"))
 
     @staticmethod
@@ -101,9 +115,8 @@ class Game:
             "==================================================\n"
         )
         [print(f"{x.name} has {len(x.cards)} cards\n") for x in [player1, player2]]
-        print("Hit enter to start a round!")
 
     @staticmethod
     def pretty_print(text):
-        f = Figlet(font="ogre")
+        f = Figlet(font="contessa")
         return f.renderText(text)
